@@ -1,0 +1,8 @@
+test:
+    path: /test/{path}/{filter}
+    defaults:
+        _controller: 'Imagefilter\Controller\ImagefilterController::loadAction'
+        _scope: frontend
+        _token_check: false
+        path: 666
+        filter: 666

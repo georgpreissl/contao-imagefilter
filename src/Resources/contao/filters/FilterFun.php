@@ -1,6 +1,6 @@
 <?php
 
-class Filter {
+class FilterFun {
 	/**
 	 * @var resource
 	 */
