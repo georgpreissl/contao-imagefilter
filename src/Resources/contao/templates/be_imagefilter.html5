@@ -5,12 +5,12 @@
 
 <div class="imagefilter_wrap">
 	<div class="imagefilter_header">
-		<img class="imagefilter_icon" src="system/modules/imagefilter/html/filter.svg">
+		<img class="imagefilter_icon" src="bundles/georgpreisslimagefilter/icons/filter.svg">
 		<h1>Imagefilter</h1>
 	</div>
 	<?= $this->messages ?>
 
-	<form id="imagefilter_form" action="<?= $this->formAction ?>" class="tl_form" method="get" >
+	<form id="imagefilter_form" action="<?= $this->formAction ?>" class="tl_form imagefilter_form" method="get" >
 
 		<div class="tl_formbody_edit" >
 
@@ -31,7 +31,7 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<h1><?= $GLOBALS['TL_LANG']['MSC']['imagefilterFilterSelection'] ?></h1>
+					<h2><?= $GLOBALS['TL_LANG']['MSC']['imagefilterFilterSelection'] ?></h2>
 					<fieldset class="imagefilter_list">
 						<ul>
 						<?php foreach($this->filters as $filter) : ?>
@@ -59,52 +59,48 @@
 
 <script>
 $.noConflict();
-jQuery( document ).ready(function( $ ) {
-  // Code that uses jQuery's $ can follow here.
+jQuery(document).ready(function( $ ) {
 
-			$('[type=radio]').click(function() {
-				// console.log("ck");
-				// return false;
-				$(this).parent().addClass("active").siblings().removeClass("active");
-				var image = $('#preview img').attr('class');
-				if($('#filter_info').children().length == 0) {
-					$('#filter_info').append('<p>Processing...</p>');
-				}
-				$('.imagefilter_wrap').addClass('processing');
-// $("#filter_info").load("system/modules/imagefilter/ajax/process.php?image=<?= $this->inputId ?>&filter=" + $(this).val());
+	$('[type=radio]').click(function(e) {
 
-				$('.imagefilter_preview img').load(function() {
-					$('.imagefilter_wrap').removeClass('processing');
-					$('#filter_info').children().remove();
-				}).attr('src', 'system/modules/imagefilter/ajax/process.php?image=<?= $this->inputId ?>&filter=' + $(this).val());
+		$(this).parent().addClass("active").siblings().removeClass("active");
+
+		$('.imagefilter_wrap').addClass('processing');
+
+		var filter = $(this).val();
+		// console.log(filter);
+
+		var id = "<?php echo $this->id ?>";
+		// console.log(id);
+
+		var url = "/test/"+id+"/"+ filter;
+		// console.log(url);
+		/*
+		$.ajax({
+			type: "POST",
+			url: url,
+			success: function(data) {
+				console.log('data: ',data);
+				$('.imagefilter_wrap').removeClass('processing');
+				$('#filter_info').children().remove();
+				$('.imagefilter_preview img').attr('src',data)
+			},  
+			error: function(msg) {
+				// console.log('Var: ','fehler!');
+				console.log(msg);
+				//alert("Your browser broke!");
+				return false;
+			}
+		});
+		*/
+		$('.imagefilter_preview img').load(function() {
+			$('.imagefilter_wrap').removeClass('processing');
+			// $('#filter_info').children().remove();
+		}).attr('src', url);
 
 
-
-			});
+	});
 
 });
-
-
-window.onload = function () {
-
-
-
-/*
-	document.getElementById("cropForm").onsubmit = function() {
-		var objCropData = cropper.getData(true);
-		//console.log(objCropData);
-		document.getElementById('new_locx').value = objCropData.x;	
-		document.getElementById('new_locy').value = objCropData.y;	
-		document.getElementById('new_locw').value = objCropData.width;	
-		document.getElementById('new_loch').value = objCropData.height;	
-
-		return true; 
-	};
-
-*/
-
-
-};
-
 
 </script>

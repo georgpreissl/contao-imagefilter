@@ -1,39 +1,33 @@
-<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
+<?php
 
-/**
- * TYPOlight webCMS
- *
- * The TYPOlight webCMS is an accessible web content management system that 
- * specializes in accessibility and generates W3C-compliant HTML code. It 
- * provides a wide range of functionality to develop professional websites 
- * including a built-in search engine, form generator, file and user manager, 
- * CSS engine, multi-language support and many more. For more information and 
- * additional TYPOlight applications like the TYPOlight MVC Framework please 
- * visit the project website http://www.typolight.org.
- *
- * 
- *
- * @author     Georg Preissl <http://www.georg-preissl.at> 
- * @package    imagecrop
- * @license    MIT
- * 
- */
+namespace GeorgPreissl\Imagefilter;
 
-class ImageFilter extends Backend
+use Contao\DataContainer;
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\BackendTemplate;
+use Contao\File;
+
+class Filtering extends Backend
 {
 
 	public function filterImage(DataContainer $dc)
 	{
+
+
+
+
 		
-		// load the filter class
-		require 'filters/Filter.php';
 
 
 		// filter-form has been submitted, so lets filter the image
 
-		if (strlen($this->Input->get('token')) && $this->Input->get('token') == $this->Session->get('tl_imagecrop'))
+		if (strlen($this->Input->get('token')) && $this->Input->get('token') == $this->Session->get('tl_imagefilter'))
 		{			
+			// load the filter class
+			require 'filters/FilterFun.php';
 
+			// var_dump($this->Input->get('filter'));
 			$strPath = TL_ROOT.'/'.$this->Input->get('id');
 
 			// get width and height of the original image
@@ -46,7 +40,7 @@ class ImageFilter extends Backend
 			$strFilter = $this->Input->get('filter');
 
 			// create a filter class instance and call the filter method
-			$objFilter = new Filter($resImgSrc);
+			$objFilter = new \FilterFun($resImgSrc);
 			if(is_callable(array($objFilter, $strFilter))){
 			    $objFilter->$strFilter();
 			}else{
@@ -97,7 +91,9 @@ class ImageFilter extends Backend
 				$this->log('A filter has been applied to the image "'.$this->Input->get('id').'"', 'imagefilter filterImage()', TL_FILES);
 			}
 			// go back to the file list
-			$this->redirect($this->Environment->script.'?do=files');
+			// $this->redirect($this->Environment->script.'?do=files');
+			$this->redirect('contao?do=files');
+
 		}
 			
 
@@ -107,14 +103,15 @@ class ImageFilter extends Backend
 
 		// create and set the token (e.g. '8d7cfa67389c2df17e192965f7121793')
 		$strToken = md5(uniqid('', true));
-		$this->Session->set('tl_imagecrop', $strToken);
+		$this->Session->set('tl_imagefilter', $strToken);
 
 
 		if (TL_MODE == 'BE')
 		{
 			$GLOBALS['TL_JAVASCRIPT'][] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'; 
-			$GLOBALS['TL_CSS'][] = 'system/modules/imagefilter/html/css/bootstrap.css'; 
-			$GLOBALS['TL_CSS'][] = 'system/modules/imagefilter/html/css/imagefilter.css'; 
+			$GLOBALS['TL_CSS'][] = 'bundles/georgpreisslimagefilter/css/bootstrap.css|static'; 
+			$GLOBALS['TL_CSS'][] = 'bundles/georgpreisslimagefilter/css/imagefilter.css|static'; 
+
 
 			$this->Template = new BackendTemplate('be_imagefilter');
 			$this->Template->back = $this->Environment->base . preg_replace('/&(amp;)?(id|key|submit|imagecrop|token)=[^&]*/', '', $this->Environment->request);
@@ -123,9 +120,16 @@ class ImageFilter extends Backend
 			$this->Template->inputKey = $this->Input->get('key');
 			$this->Template->inputId = $this->Input->get('id');
 			$this->Template->token = $strToken;
+
+			// get the id of the image
+			$objId = $this->Database->prepare("SELECT id FROM tl_files WHERE path = ?")->limit(1)->execute($dc->id);
+			$id = $objId->id;
+			$this->Template->id = $id;
+			
 			$this->Template->messages = $this->getMessages();
-			$this->Template->filters = array_slice(get_class_methods('Filter'), 2); 
-			$this->Template->formAction = ampersand($this->Environment->script, ENCODE_AMPERSANDS);
+			$this->Template->filters = array_slice(get_class_methods('FilterFun'), 2); 
+			// $this->Template->formAction = ampersand($this->Environment->script);
+			$this->Template->formAction = "contao?";
 
 			$strHtml .= $this->Template->parse();
 		}

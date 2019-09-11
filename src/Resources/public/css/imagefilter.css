@@ -1,18 +1,24 @@
 .imagefilter_wrap {
-	padding: 1rem;
 	
 }
 .imagefilter_header {
 	/* background-color: #f3f3f3; */
 	border-bottom: 1px solid #bbb;
-	margin-bottom: 1rem;
-	padding-bottom: 0.7rem;
+	padding: 0 1rem 1rem 1rem;
+	
 }
 .imagefilter_header h1 {
 	display: inline-block;
 	font-size: 1rem;
 	margin: .2rem 0 0 .1rem;
 	vertical-align: middle;
+}
+.imagefilter_form {
+	
+}
+.imagefilter_form .tl_formbody_edit {
+	padding: 1rem;
+	
 }
 .imagefilter_icon {
 	display: inline-block;
@@ -21,6 +27,11 @@
 }
 .imagefilter_preview {
 	position: relative;
+	
+}
+.imagefilter_preview img {
+	width: 100%;
+	max-width: 100%;
 	
 }
 .imagefilter_loader {
@@ -59,10 +70,22 @@
 	border: none;
 	background-color: transparent;
 	margin: 0;
-	padding: 0;
+	
 }
 .imagefilter_list {
 	margin-bottom: 1rem !important;
+	padding-top: .7rem;
+	
+}
+.imagefilter_credits {
+	font-size: .75rem;
+	color: #bbb;
+	line-height: 130%;
+	
+}
+.imagefilter_credits a {
+	color: inherit;
+	
 }
 .imagefilter_list ul {
 	

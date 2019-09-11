@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
  * TYPOlight webCMS
@@ -12,27 +12,17 @@
  * visit the project website http://www.typolight.org.
  *
  *
+ *
+ *
  * @author     Georg Preissl <http://www.georg-preissl.at> 
  * @package    imagefilter
  * @license    MIT
  * 
  */
 
-/**
- * Register the classes
- */
-ClassLoader::addClasses(array
-(
-	// Classes
-	'ImageFilter'                 => 'system/modules/imagefilter/ImageFilter.php'
-
-));
+$GLOBALS['BE_MOD']['system']['files']['imagefilter'] = array('GeorgPreissl\Imagefilter\Filtering', 'filterImage');
 
 
-/**
- * Register the templates
- */
-TemplateLoader::addFiles(array
-(
-	'be_imagefilter'                => 'system/modules/imagefilter/templates'
-));
+
+
+?>

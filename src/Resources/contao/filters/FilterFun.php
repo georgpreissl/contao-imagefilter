@@ -1,6 +1,9 @@
 <?php
 
-class Filter {
+// namespace GeorgPreissl\Imagefilter; 
+
+
+class FilterFun {
 	/**
 	 * @var resource
 	 */
@@ -21,7 +24,7 @@ class Filter {
 	
 	public function __construct(&$image) {
 		$this->image = $image;
-		$this->assetDirectory = dirname(dirname(dirname(__FILE__))) . '/imagefilter/filters/assets/';
+		$this->assetDirectory = __DIR__ . '/assets/';
 
 	}
 	
