@@ -1,6 +1,6 @@
 <?php
 
-namespace GeorgPreissl\Imagefilter; 
+namespace GeorgPreissl\Imagefilter\Controller; 
 
 
 use Contao\CoreBundle\Exception\PageNotFoundException;

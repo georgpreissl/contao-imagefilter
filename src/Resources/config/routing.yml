@@ -1,7 +1,7 @@
 test:
     path: /test/{id}/{filter}
     defaults:
-        _controller: 'GeorgPreissl\Imagefilter\ImagefilterController::loadAction'
+        _controller: 'GeorgPreissl\Imagefilter\Controller\ImagefilterController::loadAction'
         _scope: backend
         _token_check: false
         id: 0
