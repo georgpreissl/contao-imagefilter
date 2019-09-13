@@ -1,0 +1,129 @@
+
+<div id="tl_buttons">
+	<a href="<?= $this->back ?>" class="header_back" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['backBT']) ?>"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+</div>
+
+<div class="imagefilter_wrap">
+	<div class="imagefilter_header">
+		<img class="imagefilter_icon" src="bundles/georgpreisslimagefilter/icons/filter.svg">
+		<h1>Imagefilter</h1>
+	</div>
+	<?= $this->messages ?>
+
+	<form id="imagefilter_form" action="<?= $this->formAction ?>" class="tl_form" method="get" >
+
+		<div class="tl_formbody_edit" >
+
+			<input type="hidden" name="do" value="<?= $this->inputDo ?>" />
+			<input type="hidden" name="key" value="<?= $this->inputKey ?>" />
+			<input type="hidden" name="id" value="<?= $this->inputId ?>" />
+			<input type="hidden" name="token" value="<?= $this->token ?>" />
+
+			<div class="row">
+				<div class="col-md-9">
+					<div class="imagefilter_preview">
+						<img src="<?= $this->imageSrc ?>" alt="Picture">
+						<div class="imagefilter_loader">
+							<div class="spinner_wrap">
+								<div class="spinner"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<h1><?= $GLOBALS['TL_LANG']['MSC']['imagefilterFilterSelection'] ?></h1>
+					<fieldset class="imagefilter_list">
+						<ul>
+						<?php foreach($this->filters as $filter) : ?>
+							<li>
+							    <input type="radio" id="<?= $filter ?>" name="filter" value="<?= $filter ?>">
+							    <label for="<?= $filter ?>"><?= $filter ?></label>
+							</li>
+						<?php endforeach; ?>
+						</ul>
+					</fieldset>					
+   					<p class="imagefilter_credits"><?= $GLOBALS['TL_LANG']['MSC']['imagefilterCredits'] ?></p>
+				</div>
+			</div>
+		</div>
+
+		<div class="tl_formbody_submit">
+			<div class="tl_submit_container">
+				<input type="submit" id="UpdateImage" name="UpdateImage" class="tl_submit" alt="<?= specialchars($GLOBALS['TL_LANG']['MSC']['imagefilterUpdateImage']).'" accesskey="s" value="'.specialchars($GLOBALS['TL_LANG']['MSC']['imagefilterUpdateImage']) ?>" /> 
+				<input type="submit" id="submit" name="submit" class="tl_submit" alt="<?= specialchars($GLOBALS['TL_LANG']['MSC']['imagefilterSaveCopy']).'" accesskey="a" value="'.specialchars($GLOBALS['TL_LANG']['MSC']['imagefilterSaveCopy']) ?>" /> 
+			</div>
+		</div>
+
+	</form>
+</div>
+
+<script>
+$.noConflict();
+jQuery(document).ready(function( $ ) {
+
+	$('[type=radio]').click(function() {
+
+		/*
+		console.log(url);
+		$(this).parent().addClass("active").siblings().removeClass("active");
+		var image = $('#preview img').attr('class');
+		if($('#filter_info').children().length == 0) {
+			$('#filter_info').append('<p>Processing...</p>');
+		}
+		$('.imagefilter_wrap').addClass('processing');
+		*/
+		var url = "/test/<?php echo $this->inputId ?>/"+ $(this).val();
+		console.log(url);
+		/*
+		$.ajax({
+			type: "POST",
+			url: url,
+			success: function(data) {
+				console.log('data: ',data);
+
+				
+			},  
+			error: function(msg) {
+				console.log('Var: ','fehler!');
+				console.log('Var: ',msg);
+				//alert("Your browser broke!");
+				return false;
+			}
+		});
+		*/
+		/*
+		$('.imagefilter_preview img').load(function() {
+			$('.imagefilter_wrap').removeClass('processing');
+			$('#filter_info').children().remove();
+		}).attr('src', 'bundles/georgpreisslimagefilter/process.php?image=<? // echo $this->inputId ?>&filter=' + $(this).val());
+
+		*/
+
+	});
+
+});
+
+
+window.onload = function () {
+
+
+
+/*
+	document.getElementById("cropForm").onsubmit = function() {
+		var objCropData = cropper.getData(true);
+		//console.log(objCropData);
+		document.getElementById('new_locx').value = objCropData.x;	
+		document.getElementById('new_locy').value = objCropData.y;	
+		document.getElementById('new_locw').value = objCropData.width;	
+		document.getElementById('new_loch').value = objCropData.height;	
+
+		return true; 
+	};
+
+*/
+
+
+};
+
+
+</script>
