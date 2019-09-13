@@ -1,6 +1,6 @@
 <?php
 
-namespace GeorgPreissl\Imagefilter; 
+namespace GeorgPreissl\Imagefilter\Controller; 
 
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
@@ -17,41 +17,36 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 
-
-
 class ImagefilterController extends Controller
 {
 
 	/**
-	 * @Route("/test/")
+	 * @Route("/test")
 	 */
-	public function loadAction($path, $filter): Response
+	public function loadAction($id,$filter): Response
 	{
 
+		if ($id && $filter) {
 
-
-		$objArticleModel = \ArticleModel::findByPk(2);
-		$title = $objArticleModel->title;    	
-		return new JsonResponse($title); 
-
-		/*
-
-		if ($strPath && $strFilter) {
+			// return new JsonResponse("test"); 
 			
-			require '../Resources/contao/filters/FilterFun.php';
+			// get the path of the given image
+			$db = \Contao\System::getContainer()->get('database_connection');
+			$result = $db->executeQuery("SELECT path FROM tl_files WHERE id = ?", [$id])->fetch();
+			$path = $result['path'];
 
-			$strPath = "../../../../".$strPath;
-			list($picW, $picH) = getimagesize($strPath);
+			// Save the image dimensions in the variables $picW and $picH
+			list($picW, $picH) = getimagesize($path);
 
 			// Create a new image resource identifier (the source image)
-			$resImgSrc = imagecreatefromjpeg($strPath);
+			$resImgSrc = imagecreatefromjpeg($path);
 
-			// Create a Filter instance
-			$objFilter = new FilterFun($resImgSrc);
+			// Create a filter instance
+			$objFilter = new \FilterFun($resImgSrc);
 
 
-			if(is_callable(array($objFilter, $strFilter))){
-			    $objFilter->$strFilter();
+			if(is_callable(array($objFilter, $filter))){
+			    $objFilter->$filter();
 			} else {
 			    $objFilter->sepia();
 			}
@@ -62,31 +57,14 @@ class ImagefilterController extends Controller
 			// Copy part of the source image
 			imagecopy($resImgDest, $resImgSrc, 0, 0, 0, 0, $picW, $picH);
 
-			// return the image
+			// Return the image
 			header('Content-type: image/jpeg');
 			imagejpeg($resImgDest, null, 100);
 			imagedestroy($resImgDest);
 			imagedestroy($resImgSrc);
-
+			
 
 		}
-
-		*/
-		/*
-
-
-        $objResponse = new Response($strBuffer);
-        $objResponse->headers->set('Content-Type', 'text/html; charset=UTF-8');
-        return $objResponse;
-
-		
-
-		*/
-
-
-
-
-
 
 
 	}

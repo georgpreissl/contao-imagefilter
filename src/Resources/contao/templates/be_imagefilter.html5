@@ -10,7 +10,7 @@
 	</div>
 	<?= $this->messages ?>
 
-	<form id="imagefilter_form" action="<?= $this->formAction ?>" class="tl_form" method="get" >
+	<form id="imagefilter_form" action="<?= $this->formAction ?>" class="tl_form imagefilter_form" method="get" >
 
 		<div class="tl_formbody_edit" >
 
@@ -31,7 +31,7 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<h1><?= $GLOBALS['TL_LANG']['MSC']['imagefilterFilterSelection'] ?></h1>
+					<h2><?= $GLOBALS['TL_LANG']['MSC']['imagefilterFilterSelection'] ?></h2>
 					<fieldset class="imagefilter_list">
 						<ul>
 						<?php foreach($this->filters as $filter) : ?>
@@ -61,69 +61,46 @@
 $.noConflict();
 jQuery(document).ready(function( $ ) {
 
-	$('[type=radio]').click(function() {
+	$('[type=radio]').click(function(e) {
 
-		/*
-		console.log(url);
 		$(this).parent().addClass("active").siblings().removeClass("active");
-		var image = $('#preview img').attr('class');
-		if($('#filter_info').children().length == 0) {
-			$('#filter_info').append('<p>Processing...</p>');
-		}
+
 		$('.imagefilter_wrap').addClass('processing');
-		*/
-		var url = "/test/<?php echo $this->inputId ?>/"+ $(this).val();
-		console.log(url);
+
+		var filter = $(this).val();
+		// console.log(filter);
+
+		var id = "<?php echo $this->id ?>";
+		// console.log(id);
+
+		var url = "/imagefilter/"+id+"/"+ filter;
+		// console.log(url);
 		/*
 		$.ajax({
 			type: "POST",
 			url: url,
 			success: function(data) {
 				console.log('data: ',data);
-
-				
+				$('.imagefilter_wrap').removeClass('processing');
+				$('#filter_info').children().remove();
+				$('.imagefilter_preview img').attr('src',data)
 			},  
 			error: function(msg) {
-				console.log('Var: ','fehler!');
-				console.log('Var: ',msg);
+				// console.log('Var: ','fehler!');
+				console.log(msg);
 				//alert("Your browser broke!");
 				return false;
 			}
 		});
 		*/
-		/*
 		$('.imagefilter_preview img').load(function() {
 			$('.imagefilter_wrap').removeClass('processing');
-			$('#filter_info').children().remove();
-		}).attr('src', 'bundles/georgpreisslimagefilter/process.php?image=<? // echo $this->inputId ?>&filter=' + $(this).val());
+			// $('#filter_info').children().remove();
+		}).attr('src', url);
 
-		*/
 
 	});
 
 });
-
-
-window.onload = function () {
-
-
-
-/*
-	document.getElementById("cropForm").onsubmit = function() {
-		var objCropData = cropper.getData(true);
-		//console.log(objCropData);
-		document.getElementById('new_locx').value = objCropData.x;	
-		document.getElementById('new_locy').value = objCropData.y;	
-		document.getElementById('new_locw').value = objCropData.width;	
-		document.getElementById('new_loch').value = objCropData.height;	
-
-		return true; 
-	};
-
-*/
-
-
-};
-
 
 </script>

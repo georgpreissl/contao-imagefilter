@@ -13,16 +13,21 @@ class Filtering extends Backend
 
 	public function filterImage(DataContainer $dc)
 	{
+
+
+
+
 		
-		// load the filter class
-		require 'filters/FilterFun.php';
 
 
 		// filter-form has been submitted, so lets filter the image
 
 		if (strlen($this->Input->get('token')) && $this->Input->get('token') == $this->Session->get('tl_imagefilter'))
 		{			
+			// load the filter class
+			require 'filters/FilterFun.php';
 
+			// var_dump($this->Input->get('filter'));
 			$strPath = TL_ROOT.'/'.$this->Input->get('id');
 
 			// get width and height of the original image
@@ -78,6 +83,25 @@ class Filtering extends Backend
 
 				// frees any memory associated with the image resource
 				imagedestroy($resImgDest);
+
+				// Create the file
+				if (is_file(TL_ROOT . '/' . $strNewPath))
+				{
+					$objFile = new \File($strNewPath);
+
+					$objModel = new \FilesModel();
+					$objModel->pid       = $strPid;
+					$objModel->tstamp    = time();
+					$objModel->name      = $objFile->name;
+					$objModel->type      = 'file';
+					$objModel->path      = $objFile->path;
+					$objModel->extension = $objFile->extension;
+					$objModel->found     = 2;
+					$objModel->hash      = $objFile->hash;
+					$objModel->uuid      = $objDatabase->getUuid();
+					$objModel->save();
+				}
+
 			}
 
 			if (!$error) 
@@ -104,8 +128,9 @@ class Filtering extends Backend
 		if (TL_MODE == 'BE')
 		{
 			$GLOBALS['TL_JAVASCRIPT'][] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js'; 
-			$GLOBALS['TL_CSS'][] = 'system/modules/imagefilter/html/css/bootstrap.css|static'; 
-			$GLOBALS['TL_CSS'][] = 'system/modules/imagefilter/html/css/imagefilter.css|static'; 
+			$GLOBALS['TL_CSS'][] = 'bundles/georgpreisslimagefilter/css/bootstrap.css|static'; 
+			$GLOBALS['TL_CSS'][] = 'bundles/georgpreisslimagefilter/css/imagefilter.css|static'; 
+
 
 			$this->Template = new BackendTemplate('be_imagefilter');
 			$this->Template->back = $this->Environment->base . preg_replace('/&(amp;)?(id|key|submit|imagecrop|token)=[^&]*/', '', $this->Environment->request);
@@ -114,6 +139,12 @@ class Filtering extends Backend
 			$this->Template->inputKey = $this->Input->get('key');
 			$this->Template->inputId = $this->Input->get('id');
 			$this->Template->token = $strToken;
+
+			// get the id of the image
+			$objId = $this->Database->prepare("SELECT id FROM tl_files WHERE path = ?")->limit(1)->execute($dc->id);
+			$id = $objId->id;
+			$this->Template->id = $id;
+			
 			$this->Template->messages = $this->getMessages();
 			$this->Template->filters = array_slice(get_class_methods('FilterFun'), 2); 
 			// $this->Template->formAction = ampersand($this->Environment->script);
