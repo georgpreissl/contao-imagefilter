@@ -1,2 +1,2 @@
 # Contao imagefilter
-Filter effects for the contao backend filemanager
+Apply filter effects to images in the contao backend filemanager
