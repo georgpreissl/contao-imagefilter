@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 imagefilter:
     path: /imagefilter/{id}/{filter}
-=======
-test:
-    path: /test/{id}/{filter}
->>>>>>> master
     defaults:
         _controller: 'GeorgPreissl\Imagefilter\Controller\ImagefilterController::loadAction'
         _scope: backend
