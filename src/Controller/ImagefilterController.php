@@ -8,7 +8,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\Validator;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -17,51 +16,52 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 
-class ImagefilterController extends Controller
+class ImagefilterController
 {
 
-	/**
-	 * @Route("/test")
-	 */
+
 	public function loadAction($id,$filter): Response
 	{
 
-		if ($id && $filter) {
+		// $id -> id of the image (eg. '3')
+		// $filter -> name of the filter (eg. 'sepia')
 
-			// return new JsonResponse("test"); 
+		if ($id && $filter) {
 			
 			// get the path of the given image
-			$db = \Contao\System::getContainer()->get('database_connection');
-			$result = $db->executeQuery("SELECT path FROM tl_files WHERE id = ?", [$id])->fetch();
-			$path = $result['path'];
-
-			// Save the image dimensions in the variables $picW and $picH
-			list($picW, $picH) = getimagesize($path);
-
+			$objDbConnection = \Contao\System::getContainer()->get('database_connection');
+			$arrResult = $objDbConnection->executeQuery("SELECT path FROM tl_files WHERE id = ?", [$id])->fetch();
+			$strPath = $arrResult['path'];
+			
+			// Save the image dimensions in the variables $intImgW and $intImgH
+			list($intImgW, $intImgH) = getimagesize($strPath);
+			
 			// Create a new image resource identifier (the source image)
-			$resImgSrc = imagecreatefromjpeg($path);
-
+			$objResImgSrc = imagecreatefromjpeg($strPath);
+			
 			// Create a filter instance
-			$objFilter = new \FilterFun($resImgSrc);
+			$objFilter = new \FilterFun($objResImgSrc);
 
 
 			if(is_callable(array($objFilter, $filter))){
+				// execute the filter
 			    $objFilter->$filter();
 			} else {
-			    $objFilter->sepia();
+				// throw an error
+			    exit("Unable to find filter named '$filter'");
 			}
 				
 			// Create a true color image resource identifier (the destination image)
-			$resImgDest = imagecreatetruecolor($picW, $picH);
+			$objResImgDest = imagecreatetruecolor($intImgW, $intImgH);
 
 			// Copy part of the source image
-			imagecopy($resImgDest, $resImgSrc, 0, 0, 0, 0, $picW, $picH);
+			imagecopy($objResImgDest, $objResImgSrc, 0, 0, 0, 0, $intImgW, $intImgH);
 
 			// Return the image
 			header('Content-type: image/jpeg');
-			imagejpeg($resImgDest, null, 100);
-			imagedestroy($resImgDest);
-			imagedestroy($resImgSrc);
+			imagejpeg($objResImgDest, null, 100);
+			imagedestroy($objResImgDest);
+			imagedestroy($objResImgSrc);
 			
 
 		}

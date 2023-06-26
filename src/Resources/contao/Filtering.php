@@ -16,10 +16,6 @@ class Filtering extends Backend
 
 
 
-
-		
-
-
 		// filter-form has been submitted, so lets filter the image
 
 		if (strlen($this->Input->get('token')) && $this->Input->get('token') == $this->Session->get('tl_imagefilter'))
@@ -149,7 +145,7 @@ class Filtering extends Backend
 			$this->Template->filters = array_slice(get_class_methods('FilterFun'), 2); 
 			// $this->Template->formAction = ampersand($this->Environment->script);
 			$this->Template->formAction = "contao?";
-
+			$strHtml='';
 			$strHtml .= $this->Template->parse();
 		}
 
